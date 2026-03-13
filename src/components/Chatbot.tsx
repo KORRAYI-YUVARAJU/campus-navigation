@@ -2,6 +2,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiMessageCircle, FiX, FiSend, FiNavigation } from 'react-icons/fi';
+import { useRouter } from 'next/navigation';
 import { campusNodes } from '@/lib/dijkstra';
 
 interface Msg { id:number; text:string; sender:'user'|'bot'; action?:{type:'navigate';dest:string} }
@@ -18,6 +19,10 @@ const knowledge: Record<string,string> = {
   bus_stand:'Bus Stand is in the northern campus, near the canteen.',
   it:'IT Department is centrally placed with 3 floors of classrooms and labs.',
   mechanical:'Mechanical Department is on the western side with workshops.',
+  civil:'Civil Engineering Department is centrally located with 3 floors and a CE Lab.',
+  chem:'Chemistry Laboratory is located near the IT department.',
+  chemical:'Chemistry Laboratory is located near the IT department.',
+  workshop:'Workshop Laboratory is accessible near the Mechanical Department.'
 };
 
 function getAnswer(q: string): { text:string; dest?:string } {
@@ -29,7 +34,10 @@ function getAnswer(q: string): { text:string; dest?:string } {
     if(b) return { text:`${b.name} is located on campus. Click "Navigate" to see the route!`, dest:b.id };
   }
   for(const [k,v] of Object.entries(knowledge)){
-    if(lq.includes(k)){ const b=campusNodes.find(n=>n.id.includes(k)||n.name.toLowerCase().includes(k)); return {text:v,dest:b?.id} }
+    if(new RegExp(`\\b${k}\\b`).test(lq)){
+      const b=campusNodes.find(n=>n.id.includes(k)||n.name.toLowerCase().includes(k));
+      return {text:v,dest:b?.id}
+    }
   }
   if(lq.includes('event')||lq.includes('today')) return {text:'Current events:\n• Tech Talk at Auditorium (2 PM)\n• Coding Workshop at CSE Lab (3 PM)\n• Cultural Practice at Ground (5 PM)'};
   if(lq.includes('help')) return {text:'I can help with:\n• Finding buildings\n• Navigation directions\n• Campus events\n\nTry: "Where is the CSE block?"'};
@@ -37,6 +45,7 @@ function getAnswer(q: string): { text:string; dest?:string } {
 }
 
 export default function Chatbot({ onNavigate }: { onNavigate?:(d:string)=>void }) {
+  const router = useRouter();
   const [isOpen,setIsOpen]=useState(false);
   const [msgs,setMsgs]=useState<Msg[]>([{id:0,text:'Hello! 👋 I\'m your MVGR Campus Navigator. Ask me about any location!',sender:'bot'}]);
   const [input,setInput]=useState('');
@@ -87,7 +96,10 @@ export default function Chatbot({ onNavigate }: { onNavigate?:(d:string)=>void }
                     style={{background:m.sender==='user'?'linear-gradient(135deg,#3b82f6,#8b5cf6)':'var(--bg-tertiary)',color:m.sender==='user'?'#fff':'var(--text-primary)'}}>
                     <p className="whitespace-pre-line">{m.text}</p>
                     {m.action && (
-                      <button onClick={()=>onNavigate?.(m.action!.dest)}
+                      <button onClick={()=>{
+                          if(onNavigate) onNavigate(m.action!.dest);
+                          else router.push('/dashboard?navigate='+m.action!.dest);
+                        }}
                         className="mt-2 px-3 py-1 rounded-lg text-xs font-semibold flex items-center gap-1"
                         style={{background:'rgba(255,255,255,.2)',border:'1px solid rgba(255,255,255,.3)',color:m.sender==='user'?'#fff':'var(--accent-blue)'}}>
                         <FiNavigation className="text-xs"/> Navigate

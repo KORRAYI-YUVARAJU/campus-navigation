@@ -60,6 +60,13 @@ function Content() {
     if (res) { setRoute(res.pathCoords); setSel(campusNodes.find(n => n.id === did) || null); }
   };
 
+  useEffect(() => {
+    const navDest = sp.get('navigate');
+    if (navDest && campusNodes.find(n => n.id === navDest)) {
+      navigate(navDest);
+    }
+  }, [sp]);
+
   const onSearch = (r: { id: string; parent?: string; name: string }) => {
     setQ(''); setFocused(false);
     if (r.parent) { navigate(r.parent); setTargetRoom(r.name); setTimeout(() => setShow3D(true), 2500); }
