@@ -4,7 +4,7 @@ import { useRef, useEffect, useState } from 'react';
 import Chatbot from '@/components/Chatbot';
 import { FiAward, FiUsers, FiBookOpen, FiMapPin, FiStar, FiZap, FiShield, FiGlobe } from 'react-icons/fi';
 
-function Counter({ target, label, icon: Icon }: { target: number; label: string; icon: React.ElementType }) {
+function Counter({ target, label, icon: Icon }: { target: number; label: string; icon: any }) {
   const [count, setCount] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true });

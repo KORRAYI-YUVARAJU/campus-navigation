@@ -67,17 +67,7 @@ export default function Navbar() {
           </div>
 
           <div className="flex items-center gap-3">
-            {/* Theme in navbar */}
-            <motion.button whileHover={{ scale:1.1 }} whileTap={{ scale:.9 }}
-              onClick={toggleTheme}
-              className="w-10 h-10 rounded-full flex items-center justify-center"
-              style={{ background:'var(--bg-tertiary)', border:'1px solid var(--border-color)' }}>
-              <AnimatePresence mode="wait">
-                <motion.div key={theme} initial={{ rotate:-90,opacity:0 }} animate={{ rotate:0,opacity:1 }} exit={{ rotate:90,opacity:0 }} transition={{ duration:.2 }}>
-                  {theme === 'dark' ? <FiSun className="text-yellow-400" /> : <FiMoon className="text-indigo-500" />}
-                </motion.div>
-              </AnimatePresence>
-            </motion.button>
+            {/* Theme in navbar removed */}
 
             {/* Mobile toggle */}
             <button className="md:hidden w-10 h-10 rounded-lg flex items-center justify-center"
@@ -108,15 +98,7 @@ export default function Navbar() {
         </AnimatePresence>
       </motion.nav>
 
-      {/* ── Floating Theme Button ── */}
-      <motion.button
-        initial={{ scale:0 }} animate={{ scale:1 }}
-        whileHover={{ scale:1.15 }} whileTap={{ scale:.9 }}
-        onClick={toggleTheme}
-        className="fixed bottom-6 left-6 z-50 w-14 h-14 rounded-full flex items-center justify-center shadow-xl cursor-pointer"
-        style={{ background:'linear-gradient(135deg,var(--accent-blue),var(--accent-purple))', boxShadow:'0 0 25px var(--accent-blue-glow)' }}>
-        {theme === 'dark' ? <FiSun className="text-white text-xl" /> : <FiMoon className="text-white text-xl" />}
-      </motion.button>
+      {/* ── Floating Theme Button removed ── */}
     </>
   );
 }

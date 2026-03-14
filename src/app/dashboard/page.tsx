@@ -9,6 +9,7 @@ import { campusNodes, dijkstra, CampusNode } from '@/lib/dijkstra';
 import { FiSearch, FiX, FiNavigation, FiMapPin, FiCalendar, FiClock, FiArrowRight } from 'react-icons/fi';
 
 const Building3DView = dynamic(() => import('@/components/Building3DView'), { ssr: false });
+const CampusPathfindingMap = dynamic(() => import('@/components/CampusPathfindingMap'), { ssr: false });
 
 const events = [
   { title: 'Tech Talk: AI in Education', loc: 'admin', time: '2:00 PM', date: 'Today', emoji: '🎤' },
@@ -27,6 +28,7 @@ function Content() {
   const [route, setRoute] = useState<{ x: number; y: number; id: string }[] | undefined>();
   const [dest, setDest] = useState<string | null>(null);
   const [show3D, setShow3D] = useState(false);
+  const [showPathfinding, setShowPathfinding] = useState(false);
   const [targetRoom, setTargetRoom] = useState<string | undefined>();
   const [hlBuilding, setHlBuilding] = useState<string | null>(null);
 
@@ -138,6 +140,9 @@ function Content() {
                       <h3 className="font-semibold text-sm" style={{ color: 'var(--text-primary)' }}>MVGR Campus Map</h3>
                       <p className="text-xs" style={{ color: 'var(--text-tertiary)' }}>{route ? `Route: Main Gate → ${sel?.name}` : 'Click a building to navigate'}</p>
                     </div>
+                    <div className="flex gap-2 items-center">
+                      <button onClick={() => setShowPathfinding(!showPathfinding)} className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors ${showPathfinding ? 'bg-blue-600 text-white' : 'bg-gray-800 text-gray-300'}`}>3D Map mode</button>
+
                     {route && (
                       <div className="flex gap-2">
                         {sel?.floors && <button onClick={() => setShow3D(true)} className="px-3 py-1 rounded-lg text-xs text-white font-medium"
@@ -146,8 +151,11 @@ function Content() {
                           style={{ background: 'var(--bg-tertiary)', color: 'var(--text-secondary)' }}>Clear Route</button>
                       </div>
                     )}
+                    </div>
                   </div>
-                  <div className="p-2"><CampusMapSVG routePath={route} selectedBuilding={dest} onBuildingClick={n => { setSel(n); navigate(n.id); }} highlightBuilding={hlBuilding} densityData={density} /></div>
+                  <div className="p-2">
+                    {showPathfinding ? <CampusPathfindingMap selectedBuilding={dest} /> : <CampusMapSVG routePath={route} selectedBuilding={dest} onBuildingClick={n => { setSel(n); navigate(n.id); }} highlightBuilding={hlBuilding} densityData={density} />}
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>

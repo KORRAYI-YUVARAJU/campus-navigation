@@ -38,7 +38,7 @@ const catColors: Record<string, string> = {
 
 export default function CampusMapSVG({ routePath, selectedBuilding, onBuildingClick, highlightBuilding, densityData, overrideNodes }: Props) {
   const [hovered, setHovered] = useState<string | null>(null);
-  
+
   // Use passed nodes if they exist (for Map Editor live syncing), else default to static Dijkstra import
   const activeNodes = overrideNodes || campusNodes;
   const buildings = activeNodes.filter(n => n.type !== 'intersection');
@@ -119,7 +119,7 @@ export default function CampusMapSVG({ routePath, selectedBuilding, onBuildingCl
               onClick={() => onBuildingClick?.(b)}
               onMouseEnter={() => setHovered(b.id)}
               onMouseLeave={() => setHovered(null)}>
-              
+
               <g filter={hl ? 'url(#hGlow)' : 'url(#bGlow)'} fill="rgba(6, 182, 212, 0.05)" stroke={col} strokeWidth={hl ? 2.5 : 1.5}>
                 {/* Dynamically bind properties into the map shape elements */}
                 <motion.g animate={{ opacity: highlightBuilding === b.id ? [.6, 1, .6] : 1 }} transition={{ duration: 1.5, repeat: highlightBuilding === b.id ? Infinity : 0 }}>
@@ -128,8 +128,8 @@ export default function CampusMapSVG({ routePath, selectedBuilding, onBuildingCl
               </g>
 
               {/* Building Label Text overlayed directly over map structures */}
-              <text x={b.x} y={b.y + (b.id==='ground' ? 60 : b.id==='admin' ? 80 : 0)} 
-                textAnchor="middle" fill="#94a3b8" fontSize="11" fontFamily="Inter,sans-serif" fontWeight="600" 
+              <text x={b.x} y={b.y + (b.id === 'ground' ? 60 : b.id === 'admin' ? 80 : 0)}
+                textAnchor="middle" fill="#94a3b8" fontSize="11" fontFamily="Inter,sans-serif" fontWeight="600"
                 style={{ textShadow: '0 2px 4px rgba(0,0,0,0.8)' }}>
                 {b.name}
               </text>
@@ -158,7 +158,7 @@ export default function CampusMapSVG({ routePath, selectedBuilding, onBuildingCl
             <motion.path d={polyline} fill="none" stroke="#22d3ee" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"
               strokeDasharray="15,8" filter="url(#rGlow)"
               animate={{ strokeDashoffset: [-30, 0] }} transition={{ duration: 1, repeat: Infinity, ease: 'linear' }} />
-            
+
             {/* Draw nodes along the exact route path connecting them */}
             {routePath.map((p, i) => (
               <motion.circle key={i} cx={p.x} cy={p.y}
